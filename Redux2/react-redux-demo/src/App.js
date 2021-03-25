@@ -13,16 +13,20 @@ import ParentComp from './components/demo/ParentComp';
 // components in our application
 function App() {
   return (
-    // <Provider store={todoStore}>
-    //   <div className="App">
-    //     {/* <CakeContainer /> */}
-    //     <ToDoContainer/>
-    //   </div>
-    // </Provider>
-    <div>
-      <ParentComp/>
-    </div>
+    <Provider store={todoStore}>
+      <div className="App">
+        {/* <CakeContainer /> */}
+        <ToDoContainer/>
+      </div>
+    </Provider>
+    // <div>
+    //   <ParentComp/>
+    // </div>
+
   );
 }
 
 export default App;
+
+
+// https://embed.plnkr.co/github/eggheadio-projects/getting-started-with-redux/master/23-react-redux-extracting-container-components-visibletodolist-addtodo?show=script,preview
