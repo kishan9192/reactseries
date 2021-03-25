@@ -1,0 +1,124 @@
+1
+
+if we have a list as a state, then we should avoid mutating that list
+if we want to add elements to that list, instead of using push, we can do concat or spread operator. 
+in Redux we should avoid state mutation. 
+
+// Avoid                           
+Ex: addItem = list => {                                      
+    list.push(0)
+    return list
+}
+
+
+// Do 
+addItem = list => {
+    return list.append([0])
+    // or Do
+    return [...list, 0]
+}
+
+// using concat or spread and returning the concatenated list we aren't actually changing the state
+
+
+
+2
+
+If we want to remove an item at a given index from the array. Instead of using splice we should use slice+concat
+
+// Splice can be used for adding and removing items from the list
+array.splice(index, howmany, item1, ....., itemX).     howmany denotes how many items to be removed. 3rd is optional, if we give parameters after howmany, then those items are added at the given index in the list
+
+
+// Avoid
+removeElement = (list, index) => {
+    list.splice(index, 1)
+    return list
+}
+
+// Do
+removeElement  = (list, index) => {
+    return list
+            .slice(0,index)
+            .concat(list.slice(index+1))
+}
+
+// or do
+removeElement  = (list, index) => {
+    return [ ...list.slice(0,index), ...list.slice(index+1) ]
+}
+
+
+3  Increment/Decrement an item in the list
+
+// Avoid
+increment = (list, index) => {
+    list[index]++;
+    return list
+}
+
+// Do
+increment = (list, index) => {
+    return list
+            .slice(0, index)
+            .concat([list[index]] + 1)
+            .concat(list.slice(index+1))
+}
+
+// or do 
+increment = (list, index) => {
+    return [ ...list.slice(0, index), list[index] + 1, ...list.slice(index+1)];
+}
+
+
+
+
+
+4 : changing the object
+
+
+// Avoid
+const toggleTodo = (todo) => {
+    todo.completed = !todo.completed
+    return todo;
+};
+
+
+// Do (But this approach gets difficult when more properties are added to the state object, we constantly need to modify the function)
+const toggleTodo = (todo) => {
+    return {
+        id : todo.id,
+        text: todo.text,
+        completed : !todo.completed
+    }
+};
+
+// Correct way :   Object.assign is the ES6 way of copying an object, {} is the target object, further properties are copied to this target object from the objects passed in parameters, and if more than one object is modifying the same property of the target object, the last one wins. So here todo object is first copied into the target object, then the last object has completed property which will be changed in the target object which was already assigned by the todo object 
+const testToggleTodo = () => {
+  const todoBefore = {
+    id: 0,
+    text: 'Learn Redux',
+    completed: false
+  };
+}
+
+
+
+  const todoAfter = {
+    id: 0,
+    text: 'Learn Redux',
+    completed: true
+  };
+  
+  deepFreeze(todoBefore);
+  
+  expect(
+    toggleTodo(todoBefore)
+  ).toEqual(todoAfter);
+};
+
+testToggleTodo();
+console.log('All tests passed.') || displayInPreview('All tests passed.');
+
+
+
